@@ -51,8 +51,6 @@ public class GameRoot : MonoBehaviour
         //successSound.clip = successMP;
 
         resultSound = this.GetComponent<AudioSource>();
-        resultSound.volume = 0.3f;
-        //successSound.volume = 0.3f;
 
         CoolDownWaitForSeconds = new WaitForSeconds(coolDown);
     }
@@ -80,6 +78,7 @@ public class GameRoot : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             askExit.transform.localScale = new Vector3(1, 1, 1);
+            playerState.GetComponent<PlayerControl>().isOnExit = true;
             isOnExit = true;
         }
 
@@ -88,6 +87,7 @@ public class GameRoot : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.N))
             {
                 askExit.transform.localScale = new Vector3(0, 0, 0);
+                playerState.GetComponent<PlayerControl>().isOnExit = false;
                 isOnExit = false;
             }
 
@@ -95,6 +95,15 @@ public class GameRoot : MonoBehaviour
             {
                 SceneManager.LoadScene("MainScene");
             }
+        }
+
+        if (isOnExit)
+        {
+            Time.timeScale = 0;
+        }
+        else
+        {
+            Time.timeScale = 1;
         }
 
         if (playerState.GetComponent<PlayerControl>().dead == true)

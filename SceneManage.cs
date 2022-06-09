@@ -5,13 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class SceneManage : MonoBehaviour
 {
-    private GameObject optionObject;
+    private GameObject controlsObject;
+    private GameObject optionsObject;
 
     // Start is called before the first frame update
     void Start()
     {
-        optionObject = GameObject.FindGameObjectWithTag("UIControls");
-        optionObject.transform.localScale = new Vector3(0,0,0);
+        controlsObject = GameObject.FindGameObjectWithTag("UIControls");
+        controlsObject.transform.localScale = new Vector3(0,0,0);
+
+        optionsObject = GameObject.FindGameObjectWithTag("UIOptions");
+        optionsObject.transform.localScale = new Vector3(0, 0, 0);
     }
 
     // Update is called once per frame
@@ -32,15 +36,19 @@ public class SceneManage : MonoBehaviour
 
     public void ShowControls()
     {
-        optionObject.transform.localScale = new Vector3(1, 1, 1);
+        controlsObject.transform.localScale = new Vector3(1, 1, 1);
     }
     public void StopShowControls()
     {
-        optionObject.transform.localScale = new Vector3(0, 0, 0);
+        controlsObject.transform.localScale = new Vector3(0, 0, 0);
     }
 
     public void ShowOptions()
     {
-        //SceneManager.LoadScene("SampleScene");
+        optionsObject.transform.localScale = new Vector3(1, 1, 1);
+    }
+    public void StopShowOptions()
+    {
+        optionsObject.transform.localScale = new Vector3(0, 0, 0);
     }
 }

@@ -15,6 +15,7 @@ public class PlayerControl : HPController
     public Light movePointLight;
 
     public bool isSuccess = false;
+    public bool isOnExit = false;
 
     public float flashSpeed = 5.0f;
     public Color flashColor = new Color(0.35f, 0f, 0f, 0.1f);
@@ -322,18 +323,7 @@ public class PlayerControl : HPController
             // 아무 것도 주목하고 있지 않으면.
             if (this.lever == null)
             {
-                if (this.is_other_in_view(other_lever))
-                { // 정면에 있으면.
-                    this.lever = other_lever; // 주목한다.
-                }
-                // 뭔가 주목하고 있으면.
-            }
-            else if (this.lever == other_lever)
-            {
-                if (!this.is_other_in_view(other_lever))
-                { // 정면에 없으면.
-                    this.lever = null; // 주목을 그만둔다.
-                }
+                this.lever = other_lever; // 주목한다.
             }
         }
 
@@ -343,18 +333,7 @@ public class PlayerControl : HPController
             // 아무 것도 주목하고 있지 않으면.
             if (this.totem == null)
             {
-                if (this.is_other_in_view(other_totem))
-                { // 정면에 있으면.
-                    this.totem = other_totem; // 주목한다.
-                }
-                // 뭔가 주목하고 있으면.
-            }
-            else if (this.totem == other_totem)
-            {
-                if (!this.is_other_in_view(other_totem))
-                { // 정면에 없으면.
-                    this.totem = null; // 주목을 그만둔다.
-                }
+                this.totem = other_totem;
             }
         }
     }
@@ -386,7 +365,7 @@ public class PlayerControl : HPController
     {
         float x = Screen.width / 2.0f + 40.0f;
         float y = Screen.height / 2.0f - 40.0f;
-        if (!isSuccess)
+        if (!isSuccess & !isOnExit)
         {
             if (isSpaceCoolDown)
             {
@@ -409,13 +388,32 @@ public class PlayerControl : HPController
 
                 else
                 {
-                    GUI.Label(new Rect(x, y, 200.0f, 20.0f), "<color=#ffffff>G:Release</color>", guistyle);
+                    if (this.totem == null & this.lever == null)
+                    {
+                        GUI.Label(new Rect(x, y, 200.0f, 20.0f), "<color=#ffffff>G:Release</color>", guistyle);
+                    }
+                }
+
+                if(this.totem != null)
+                {
+                    if (this.totem.GetComponent<TotemControl>().isCured == false)
+                    {
+                        GUI.Label(new Rect(x, y, 200.0f, 20.0f), "<color=#ffffff>G:Cure the Totem</color>", guistyle);
+                    }
+                }
+
+                if (this.lever != null)
+                {
+                    if (this.lever.GetComponent<Lever>().isPulled == false)
+                    {
+                        GUI.Label(new Rect(x, y, 200.0f, 20.0f), "<color=#ffffff>G:Pull</color>", guistyle);
+                    }
                 }
             }
             else
             {
                 // 주목하고 있는 아이템이 있다면.
-                if (this.closest_item != null)
+                if (this.closest_item != null & this.totem == null)
                 {
                     GUI.Label(new Rect(x, y, 200.0f, 20.0f), "<color=#ffffff>G:Grab</color>", guistyle);
                 }
@@ -584,9 +582,12 @@ public class PlayerControl : HPController
                     }
                     else
                     {
-                        this.carried_item.transform.localPosition = Vector3.forward * 1.0f + Vector3.up * (-1.0f);
-                        this.carried_item.transform.parent = null;// 자식 설정을 해제.
-                        this.carried_item = null; // 들고 있던 아이템을 없앤다.
+                        if (this.totem == null & this.lever == null)
+                        {
+                            this.carried_item.transform.localPosition = Vector3.forward * 1.0f + Vector3.up * (-1.0f);
+                            this.carried_item.transform.parent = null;// 자식 설정을 해제.
+                            this.carried_item = null; // 들고 있던 아이템을 없앤다.
+                        }
                     }
                 }
             }
